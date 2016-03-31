@@ -9,15 +9,14 @@ In general, home appliances have long life-cycle, more than 10 years. Then, whic
 
 IoT dongle is another approach. Now, you buy the IoT dongle ready device. Later, you may buy the IoT dongle to enable you to get the valuable service from the Internet, separately.
 
-## Simple Configuration
+## Configuration
 ![Alt text](/IoT_dongle_device.jpg?raw=true "Simple configuration using ARDUINO and ESP8266")
-This is one simple configuration of IoT dongle ready device on ARDUINO and IoT dongle on ESP8266.
 
-The following projects explain how to build it.
+This is one simple configuration - IoT dongle ready device on ARDUINO and IoT dongle on ESP8266. The following projects explain how to build them.
 * https://github.com/gaiakeeper/device_arduino
 * https://github.com/gaiakeeper/dongle_esp8266
 
-And there are simulated device and dongle on windows. The following projects give the way.
+And there are simulated device and dongle on Windows in the following projects.
 * https://github.com/gaiakeeper/device_windows
 * https://github.com/gaiakeeper/dongle_windows
 
