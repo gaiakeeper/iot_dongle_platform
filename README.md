@@ -1,4 +1,4 @@
-# iot_dongle_platform
+# IoT Dongle Platform
 This repository provides IoT dongle platform over Wi-Fi.
 
 ## What is IoT dongle?
