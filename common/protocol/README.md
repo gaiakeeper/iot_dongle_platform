@@ -8,12 +8,16 @@ Dongle and device are very pair and they already know each other. Therefore, the
 
 The 1st byte is the basic message.
 * The 1st bit indicates whether the message is CALL (request) or RETURN (reply).
-* The next 2 bits indicate the method (C.R.U.D). CREATE means to add the given resource with the given value and DELETE to remove the given resource. READ means to get the value of the given resource and UPDATE means to set or change the value of the given resource with the given value. Therefore, CREATE and UPDATE have the given value in the message. 
+* The next 2 bits indicate the method (C.R.U.D).
+   - CREATE(00) means to add the given resource with the given value.
+   - READ(01) means to get the value of the given resource.
+   - UPDATE(10) means to set or change the value of the given resource with the given value.
+   - DELETE(11) means to remove the given resource.
 * The next 1 bit indicates whether the resource ID resides in the next 4 bits only or in the next 12 bits with one more following byte.
-* The next 4 bites or one more byte are for the resource ID.
+* The next 4 bits or 12 bits with one more byte are for the resource ID.
 
 The next byte or more are the data (value), if needed.
-* The 1st bit indicate whether the last 7 bits are only for the data or for the length of the data. If it is 0, the last 7 bits are unsigned integer value from 0 to 127.
+* The 1st bit indicates whether the last 7 bits are only for the data or for the length of the data. If it is 0, the last 7 bits are unsigned integer value from 0 to 127.
 * The next 1 bit (only if the 1st bit is 1) indicates whether the last 6 bits are the length of the data or the 14 bits with one more following byte are the length of the data.
 * The data can be in the given length of bytes (only if the 1st bit is 1).
 
@@ -31,9 +35,9 @@ In general, embedded device uses the super-loop architecture (ARDUINO has loop()
 
 The below is the map of callbacks (handlers) in the dongle.
 ![Alt text](dongle_handler.jpg?raw=true "Dongle callbacks")
-The dongle needs to handle the requests from the device * "get type", "set temperature" and "add log". And the dongle needs to handle the replies from the device which is for the request from the dongle.
+The dongle needs to handle the requests from the device - "get type", "set temperature" and "add log". And the dongle needs to handle the replies from the device which is for the request from the dongle.
 
 The below is the map of callbacks (handlers) in the device.
 ![Alt text](device_handler.jpg?raw=true "Device callbacks")
-The device needs to handle the requests from the donlge * "get type", "get/set switch", "get temperature" and "get/set preferred temperature". And the device needs to handle the replies from the dongle which is for the request from the device.
+The device needs to handle the requests from the donlge - "get type", "get/set switch", "get temperature" and "get/set preferred temperature". And the device needs to handle the replies from the dongle which is for the request from the device.
 
