@@ -15,7 +15,7 @@ The below shows [MQTT Dashboard](https://play.google.com/store/apps/details?id=c
 
 ![Alt text](/document/image/MQTT_Dashboard.jpg?raw=true "MQTT Dashboard client")
 
-As shown in the above example, 	[iot.eclipse.org](http://iot.eclipse.org) provides public MQTT server at iot.eclipse.ort:1883. You can easily create your own configuration and test it. [Eclipse Paho](https://eclipse.org/paho/) project provides open-source client implementations of MQTT and MQTT-SN messaging protocols. Based on this project, you can create your own client. [MQTT.fx](http://mqttfx.jfx4ee.org/) is one good example to use Paho client. The below is the screenshot of MQTT.fx to access the above configuration.
+As shown in the above example, 	[iot.eclipse.org](http://iot.eclipse.org) provides public MQTT server at iot.eclipse.ort:1883. You can easily create your own configuration and test it. [Eclipse Paho](https://eclipse.org/paho/) project provides open-source client implementations of MQTT and MQTT-SN messaging protocols. [MQTT.fx](http://mqttfx.jfx4ee.org/) is one good example to use Paho client. The below is the screenshot of MQTT.fx to access the above configuration.
 
 ![Alt text](/document/image/MQTT.ff.jpg?raw=true "MQTT.fx client")
 
