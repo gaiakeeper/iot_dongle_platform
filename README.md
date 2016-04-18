@@ -178,7 +178,11 @@ When you press the button "power" and make it on, it invokes BLYNK_WRITE event. 
 
 In the other case, the device wants to notify the temperature change to the dongle. The device sends the message which sets the current temperature to 28 degrees. IoT dongle platform invokes CH_SET_TEMPERATURE() in the dongle. It forwards the temperature to Blynk and makes UI widget on your mobile update the current temperature (28 degrees). And the dongle replies with NO_ERROR. IoT dongle platform invokes RH_SET_TEMPERATURE() in the device.
 
+![Alt text](/document/image/blynk_vport.jpg?raw=true "Blynk virtual ports")
+
 Blynk uses virtual port to connect between GUI widget and the value. In this example, "POWER" button widget is connected to V1 port, "TEMPERATURE" text widget is connected to V2 port and "PREFERRED" slider widget is connected to V3 port. The below shows how to create your own UI and connect virtual ports on Blynk app.
 
-![Alt text](/document/image/blynk_vport.jpg?raw=true "Blynk virtual ports")
+You can see DEMO.
+
+[![Image Alt text](https://img.youtube.com/vi/qZi8e5HlISQ/0.jpg)](https://youtu.be/qZi8e5HlISQ "Blynk demo").
 
