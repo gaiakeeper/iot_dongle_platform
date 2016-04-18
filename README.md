@@ -16,6 +16,7 @@ The below shows the architecture of IoT dongle platform. IoT dongle platform inc
 
 ## IoT dongle platform with ARDUINO
 The device is implemented using ARDUINO UNO. And the dongle is on ESP8266 as shown the below drawing. The device provides power (VCC/GND) to the dongle and they are communicating through UART (RX/TX). You can get more detail information from [ESP8266.com/arduino](http://www.esp8266.com/arduino).
+
 ![Alt text](/document/image/arduino_esp8266.jpg?raw=true "Device on ARDUINO and Dongle on ESP8266")
 
 ### Installing IoT Dongle Library
