@@ -182,7 +182,7 @@ In the other case, the device wants to notify the temperature change to the dong
 
 Blynk uses virtual port to connect between GUI widget and the value. In this example, "POWER" button widget is connected to V1 port, "TEMPERATURE" text widget is connected to V2 port and "PREFERRED" slider widget is connected to V3 port. The below shows how to create your own UI and connect virtual ports on Blynk app.
 
-You can see DEMO.
+Click the below image, you can watch DEMO video (youtube).
 
-[![Image Alt text](https://img.youtube.com/vi/qZi8e5HlISQ/0.jpg)](https://youtu.be/qZi8e5HlISQ "Blynk demo").
+[![Image Alt text](https://img.youtube.com/vi/qZi8e5HlISQ/0.jpg)](https://youtu.be/qZi8e5HlISQ "Blynk DEMO").
 
