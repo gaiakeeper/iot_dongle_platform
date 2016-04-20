@@ -180,7 +180,7 @@ Developing the dongle is almost same as developing the device.
 
    ```
 
-5. Handle MQTT event - get/send (resource ID, value) to device.
+5. Handle MQTT event - get (resource ID, value) from MQTT event and send it to device.
 
    ```
    void MQTT_CALLBACK(char* topic, byte* payload, unsigned int length) {
@@ -197,14 +197,15 @@ Developing the dongle is almost same as developing the device.
 
 You can get the full code from the examples - examples / IoTDongle / SugarHome / AirConditioner.
 
-Here is the sequence diagram from the mobile Blynk app to the air conditioner (device).
+Here is the sequence diagram from the mobile SugarHome app to the air conditioner (device).
+
 ![Alt text](/document/image/MQTT_sequence.jpg?raw=true "MQTT sequence diagram")
 
 When you press the button "power" and make it on in your Sugar Home app (or MQTT client), app publishes topic ("\<Home ID\>/\<Device ID\>/\<Resource ID=2\>/R") to MQTT broker. MQTT broker forwards the topic change to the dongle. The dongle gets the changed (RESOURCE ID, VALUE) and sends to the device.
 
 In the other case, the device wants to notify the temperature change to the dongle. The device sends the message which sets the current temperature to 28 degrees. IoT dongle platform invokes CH_SET_TEMPERATURE() in the dongle. The dongle also publishes topic ("\<Home ID\>/\<Device ID\>/\<Resource ID=3\>") to MQTT broker. MQTT broker forwards the topic change to your Sugar Home app.
 
-There are several MQTT clients. [MQTT Dashboard](https://play.google.com/store/apps/details?id=com.thn.iotmqttdashboard) is good at Mobile. The below shows to the same topic with Sugar Home example by MQTT Dashboard.
+[MQTT Dashboard](https://play.google.com/store/apps/details?id=com.thn.iotmqttdashboard) is one good MQTT client at Mobile. You can use it also as shown in the below image.
 
 ![Alt text](/document/image/MQTT_Dashboard.jpg?raw=true "MQTT Dashboard")
 
@@ -218,7 +219,6 @@ Find Blynk library in ARDUINO library manager (as shown in the below snapshot) a
 ![Alt text](/document/image/blynk_library.jpg?raw=true "Blynk library in ARDUINO")
 
 ### AirConditioner dongle for Blynk
-Developing the dongle is almost same as developing the device.
 
 1. Include "IoTDongle.h" and use namespace IoTD. And, include "ESP8266WiFi.h" and "BlynkSimpleEsp8266.h" for Blynk on ESP8266.
 
@@ -280,6 +280,7 @@ Developing the dongle is almost same as developing the device.
 You can get the full code from the examples - examples / IoTDongle / Blynk / AirConditioner.
 
 Here is the sequence diagram from the mobile Blynk app to the air conditioner (device).
+
 ![Alt text](/document/image/blynk_sequence.jpg?raw=true "Blynk sequence diagram")
 
 When you press the button "power" and make it on, it invokes BLYNK_WRITE event. The dongle gets the event and sends "set power on" message - (CALL, METHOD_SET, AirConditioner::RESOURCE_POWER, ON) - through IoT dongle platform. IoT dongle platform invokes CH_SET_POWER() in the device which handles the request from the dongle. And it will answer with NO_ERROR to the dongle. Iot dongle platform invokes RH_SET_POWER() in the dongle.
@@ -293,7 +294,4 @@ Blynk uses virtual port to connect between GUI widget and the value. In this exa
 Click the below image, you can watch DEMO video (youtube).
 
 [![Image Alt text](https://img.youtube.com/vi/qZi8e5HlISQ/0.jpg)](https://youtu.be/qZi8e5HlISQ "Blynk DEMO").
-
-
-
 
