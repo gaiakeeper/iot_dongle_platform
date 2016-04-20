@@ -99,14 +99,122 @@ In the full example code, you can easily come to know that the device simulates 
 
 You can connect ARDUINO to your PC and debug it using Serial program. In this case, Serial program can be the dongle. You can ask whether the power is on or off, by sending 0x22. The returned 0xA200 from the device means that the power is off. You can request to turn on, by sending 0x4201. The returned 0xC200 means that there is no error to handle the request. You can see the message 0x4320 from the device (ARDUINO). It means the current temperature is 32(0x20) degrees. The temperature was going up to 40(0x28) degrees. After turning on the air conditioner (0x4201 sent), the temperature was going down.
 
-## Dongle example - Blynk / AirConditioner
-In the very same manner, you can make the Internet connected dongle using ESP8266. This dongle is an example to make the AirConditioner (device) connected to [Blynk](http://blynk.cc) which provides DIY mobile app to control the device.
+## Dongle example - Sugar Home / AirConditioner
+In the very same manner, you can make the Internet connected dongle using ESP8266. This dongle is an example to make the AirConditioner (device) connected to [Sugar Home](https://github.com/gaiakeeper/sugar_home) which provides smart home framework over MQTT.
 
-### Installing ESP8266 and Blynk Library
+### Installing ESP8266 and MQTT Library
 Find ESP8266 board library in ARDUINO board manager (as shown in the below snapshot) and install it. It enables you to develop ESP8266 software using ARDUINO IDE. [esp8266.com/arduino](http://www.esp8266.com/arduino) gives more information.
+
 ![Alt text](/document/image/esp8266_library.jpg?raw=true "ESP8266 board support in ARDUINO")
 
+Find MQTT(PubSub) library in ARDUINO library manager (as shown in the below snapshot) and install it.
+
+![Alt text](/document/image/MQTT_library.jpg?raw=true "MQTT library in ARDUINO")
+
+### AirConditioner dongle for Sugar Home
+Developing the dongle is almost same as developing the device.
+
+1. Include "IoTDongle.h" and use namespace IoTD. And, include "ESP8266WiFi.h" and "PubSubClient.h" for MQTT on ESP8266.
+
+   ```
+   #include <ESP8266WiFi.h>
+   #include <PubSubClient.h>
+
+   #include <IoTDongle.h>
+   using namespace IoTD;
+   ```
+
+2. Declare the device that you want to develop.
+
+   ```
+   AirConditioner device;
+   ```
+
+3. Set callbacks and begin the device in setup(). And make connected to MQTT broker(iot.eclipse.org:1883) through Wi-Fi. To do that, you should specify SSID and password for your own Wi-Fi AP. If you want to use another MQTT broker, you can change it.
+
+   ```
+   const char* ssid     = "<your own ssid for wi-fi ";
+   const char* password = "<your own password for wi-fi>";
+   const char* host     = "iot.eclipse.org";
+   const int   port     = 1883;
+   const char* homeID   = "sugar_home";			// it should be unique ID for home
+   const char* deviceID = "air_conditioner";	// it should be unique ID for device
+
+   WiFiClient   wifi;
+   PubSubClient mqtt(wifi);    // mqtt client
+   
+   void CH_SET_POWER(Command cmd, Method api, Resource res)
+   {
+     READ_SERIAL_N_PUB_POWER;
+
+     Device::sendCommand(COMMAND_RETURN, api, res);
+     Device::sendData(ERROR_NONE);
+   }
+
+   void setup() {
+     device.setCallback(COMMAND_CALL, METHOD_SET, AirConditioner::RESOURCE_POWER, CH_SET_POWER);
+     device.begin();
+     
+     WiFi.begin(ssid, password);
+     while(WiFi.status() != WL_CONNECTED) delay(500); // wait for Wi-Fi connection
+
+     mqtt.setServer(host, port);
+     mqtt.setCallback(MQTT_CALLBACK);
+   }
+   ```
+
+4. Connect MQTT server and call device loop in ARDUINO main loop.
+
+   ```
+   void loop() {
+     if (!mqtt.connected()){
+       if(mqtt.connect(deviceID)){
+         MQTT_SUB(AirConditioner::RESOURCE_POWER);
+         MQTT_SUB(AirConditioner::RESOURCE_PREFERRED);
+       }
+     }
+
+     if (mqtt.connected()) mqtt.loop();
+     device.loop();
+   }
+
+   ```
+
+5. Handle MQTT event - get/send (resource ID, value) to device.
+
+   ```
+   void MQTT_CALLBACK(char* topic, byte* payload, unsigned int length) {
+     char* ptr = strtok(topic, "/"); if(strcmp(ptr, homeID)) return;
+     ptr = strtok(NULL, "/"); if(strcmp(ptr, deviceID)) return;
+     ptr = strtok(NULL, "/"); unsigned char res = (unsigned char)atoi(ptr);
+     ptr = strtok(NULL, "/"); if(strcmp(ptr, "R")) return;
+  
+     Device::sendCommand(COMMAND_CALL, METHOD_SET, res);
+     payload[length]=0;
+     Device::sendData((unsigned char)atoi((char*)payload));
+   }
+   ```
+
+You can get the full code from the examples - examples / IoTDongle / SugarHome / AirConditioner.
+
+Here is the sequence diagram from the mobile Blynk app to the air conditioner (device).
+![Alt text](/document/image/MQTT_sequence.jpg?raw=true "MQTT sequence diagram")
+
+When you press the button "power" and make it on in your Sugar Home app (or MQTT client), app publishes topic ("\<Home ID\>/\<Device ID\>/\<Resource ID=2\>/R") to MQTT broker. MQTT broker forwards the topic change to the dongle. The dongle gets the changed (RESOURCE ID, VALUE) and sends to the device.
+
+In the other case, the device wants to notify the temperature change to the dongle. The device sends the message which sets the current temperature to 28 degrees. IoT dongle platform invokes CH_SET_TEMPERATURE() in the dongle. The dongle also publishes topic ("\<Home ID\>/\<Device ID\>/\<Resource ID=3\>") to MQTT broker. MQTT broker forwards the topic change to your Sugar Home app.
+
+There are several MQTT clients. [MQTT Dashboard](https://play.google.com/store/apps/details?id=com.thn.iotmqttdashboard) is good at Mobile. The below shows to the same topic with Sugar Home example by MQTT Dashboard.
+
+![Alt text](/document/image/MQTT_Dashboard.jpg?raw=true "MQTT Dashboard")
+
+
+## Another dongle example - Blynk / AirConditioner
+This dongle is an example to make the AirConditioner (device) connected to [Blynk](http://blynk.cc) which provides DIY mobile app to control the device.
+
+### Installing Blynk Library
 Find Blynk library in ARDUINO library manager (as shown in the below snapshot) and install it.
+
 ![Alt text](/document/image/blynk_library.jpg?raw=true "Blynk library in ARDUINO")
 
 ### AirConditioner dongle for Blynk
@@ -185,4 +293,7 @@ Blynk uses virtual port to connect between GUI widget and the value. In this exa
 Click the below image, you can watch DEMO video (youtube).
 
 [![Image Alt text](https://img.youtube.com/vi/qZi8e5HlISQ/0.jpg)](https://youtu.be/qZi8e5HlISQ "Blynk DEMO").
+
+
+
 
